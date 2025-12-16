@@ -1,0 +1,81 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: reactive-hexagonal
+
+  docker:
+    compose:
+      enabled: false
+
+  # POSTGRESQL (R2DBC)
+  r2dbc:
+    url: r2dbc:postgresql://168.119.122.86:5432/yowyob
+    username: master
+    password: Azerty1234*
+
+  sql:
+    init:
+      mode: always
+
+  # REDIS CLUSTER 
+  data:
+    redis:
+      host: 168.119.122.86
+      port: 7000
+      password: Azerty1234*
+      cluster:
+        enabled: false
+
+  # KAFKA 
+  kafka:
+    bootstrap-servers: 168.119.122.86:9092
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+# CUSTOM CONFIG 
+application:
+  external:
+    stock-service-url: http://168.119.122.86:8081
+    fare-calculator-url: https://fare-calculator-atwh.onrender.com
+
+  kafka:
+    topics:
+      product-events: test-topic
+      notification-service-create-topic: notification-create-topic
+      # Utilisez un nom de topic dédié pour cet événement
+      offer-created: offer-created-topic
+      offer-send: notification-send-topic
+    notification-registration:
+      name: "Ride and Go"
+      email:
+        host: "smtp.gmail.com"
+        port: 587
+        username: "projet.ridego2025@gmail.com"
+        password: "ards oqrs igwg qgve"
+    notification-service:
+      token: token-topic
+      template:
+        new-offer-id: 1001
+        accepted-offer-id: 1002
+
+# RESILIENCE4J 
+resilience4j:
+  circuitbreaker:
+    instances:
+      stock-service:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        slidingWindowSize: 5
+      fare-calculator-service:
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        slidingWindowSize: 5
