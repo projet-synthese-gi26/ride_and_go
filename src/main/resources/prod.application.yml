@@ -94,10 +94,3 @@ resilience4j:
         waitDurationInOpenState: 5s
         slidingWindowSize: 5
 
-# swagger & Doc
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger
-    operationsSorter: method
